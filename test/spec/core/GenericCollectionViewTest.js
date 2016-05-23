@@ -224,6 +224,12 @@ describe('core/GenericCollectionView', function () {
 
       view.render();
 
+      expect(view.renderHeader.callCount).to.equal(0);
+      expect(view.renderContent.callCount).to.equal(0);
+      expect(view.renderFooter.callCount).to.equal(0);
+
+      view.render(true);
+
       expect(view.renderHeader.callCount).to.equal(1);
       expect(view.renderContent.callCount).to.equal(1);
       expect(view.renderFooter.callCount).to.equal(1);
