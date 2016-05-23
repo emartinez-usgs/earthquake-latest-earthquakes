@@ -2,8 +2,7 @@
 'use strict';
 
 
-var Catalog = require('latesteqs/Catalog'),
-    Collection = require('mvc/Collection'),
+var Collection = require('mvc/Collection'),
     ListView = require('list/ListView'),
     Model = require('mvc/Model');
 

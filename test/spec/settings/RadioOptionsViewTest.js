@@ -31,7 +31,7 @@ describe('RadioOptionsView', function () {
       }),
       watchProperty: 'feeds'
     });
-    radioOptionsView.render();
+    radioOptionsView.render(true);
   });
 
   afterEach(function () {
