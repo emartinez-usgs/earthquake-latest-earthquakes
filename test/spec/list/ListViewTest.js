@@ -89,24 +89,18 @@ describe('list/ListView', function () {
   });
 
   describe('renderHeader', function () {
-    it('creates header markup as expected', function (done) {
-      var catalog,
+    it('creates header markup as expected', function () {
+      var collection,
           view;
 
-      catalog = Catalog({
-        model: Model({
-          sort: {
-            'id': 'newest',
-            'name' : 'Newest first',
-            'sort' : function (a, b) {
-              return b.properties.time - a.properties.time;
-            }
-          }
-        })
-      });
+      collection = Collection();
+      collection.metadata = {
+        count: 245,
+        generated: 1460497846000
+      };
 
       view = ListView({
-        collection: catalog,
+        collection: collection,
         model: Model({
           feed: {
             'id': '7day_m25',
@@ -117,17 +111,18 @@ describe('list/ListView', function () {
         })
       });
 
-      catalog.on('reset', function () {
-        expect(view.header.querySelector('.header-title').innerHTML).to.equal('7 Days, Magnitude 2.5+ Worldwide');
-        expect(view.header.querySelector('.header-count').innerHTML).to.equal('245 earthquakes.');
-        expect(view.header.querySelector('.header-update-time').innerHTML).to.equal('Updated: 2016-04-12 21:50:46 (UTC)');
+      view.renderHeader();
 
-        view.destroy();
-        done();
-      });
+      expect(view.header.querySelector('.header-title').innerHTML)
+          .to.equal('7 Days, Magnitude 2.5+ Worldwide');
+      expect(view.header.querySelector('.header-count').innerHTML)
+          .to.equal('245 earthquakes.');
+      expect(view.header.querySelector('.header-update-time').innerHTML)
+          .to.equal('Updated: 2016-04-12 21:50:46 (UTC)');
 
-      catalog.loadUrl('/feeds/2.5_week.json');
 
+      view.destroy();
+      collection.destroy();
     });
   });
 
@@ -194,12 +189,12 @@ describe('list/ListView', function () {
     });
   });
 
-  describe('onRestrictListToMap', function () {
+  describe('onRestrictListToMapChange', function () {
     var spy,
         view;
 
     view = ListView();
-    spy = sinon.spy(view, 'onRestrictListToMap');
+    spy = sinon.spy(view, 'onRestrictListToMapChange');
     view.model.set({
       'restrictListToMap': []
     });
