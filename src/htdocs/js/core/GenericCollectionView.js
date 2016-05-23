@@ -29,7 +29,7 @@ var _DEFAULTS = {
  * The model provides information regarding the currently selected values
  * for various properties. By default, this view only listens for changes to
  * the configured `options.watchProperty` property, and when that property
- * changes, the view calls its `onEvent` method.
+ * changes, the view calls its `onWatchPropertyChange` method.
  *
  * All messaging to/from this view should occur view events/method calls on
  * the provided model.
@@ -87,7 +87,7 @@ var GenericCollectionView = function (options) {
    *     A message to display when the collection is empty
    * @param options.watchProperty {String}
    *     The name of the property on the model to watch for changes and
-   *     subsequently trigger `onEvent`.
+   *     subsequently trigger `onWatchPropertyChange`.
    */
   _initialize = function (options) {
     _this.collection = options.collection || Collection();
@@ -103,7 +103,8 @@ var GenericCollectionView = function (options) {
 
     _this.model.off('change', 'render', _this);
     if (_this.watchProperty) {
-      _this.model.on('change:' + _this.watchProperty, 'onEvent', _this);
+      _this.model.on('change:' + _this.watchProperty, 'onWatchPropertyChange',
+          _this);
     }
 
     _this.collection.on('reset', 'render', _this);
@@ -231,7 +232,8 @@ var GenericCollectionView = function (options) {
     _this.content.removeEventListener('click', _this.onContentClick, _this);
 
     if (_this.watchProperty) {
-      _this.model.off('change:' + _this.watchProperty, 'onEvent', _this);
+      _this.model.off('change:' + _this.watchProperty, 'onWatchPropertyChange',
+          _this);
     }
     _this.model.on('change', 'render', _this);
 
@@ -322,7 +324,7 @@ var GenericCollectionView = function (options) {
    * the proper corresponding rendered element(s) appear selected.
    *
    */
-  _this.onEvent = function () {
+  _this.onWatchPropertyChange = function () {
     var value;
 
     if (_this.watchProperty) {
@@ -371,7 +373,7 @@ var GenericCollectionView = function (options) {
 
         Util.empty(_this.content);
         _this.content.appendChild(container);
-        _this.onEvent(); // Make sure selected item remains selected
+        _this.onWatchPropertyChange(); // Ensure selected item stays selected
       }
     } catch (e) {
       _this.content.innerHTML = '<p class="alert error">' +

@@ -173,7 +173,7 @@ describe('core/GenericCollectionView', function () {
     });
   });
 
-  describe('onEvent', function () {
+  describe('onWatchPropertyChange', function () {
     it('calls sub-methods appropriately', function () {
       var createView,
           destroyView,
@@ -194,7 +194,7 @@ describe('core/GenericCollectionView', function () {
       };
 
       createView();
-      view.onEvent();
+      view.onWatchPropertyChange();
 
       // Nothing should happen yet because not watching anything
       expect(view.model.get.callCount).to.equal(0);
@@ -203,7 +203,7 @@ describe('core/GenericCollectionView', function () {
 
       destroyView();
       createView({watchProperty: 'example-property'});
-      view.onEvent();
+      view.onWatchPropertyChange();
 
       // Should be called now ...
       expect(view.model.get.callCount).to.equal(1);
@@ -281,12 +281,12 @@ describe('core/GenericCollectionView', function () {
       view = GenericCollectionView({collection: collection});
       sinon.spy(view, 'createCollectionContainer');
       sinon.spy(view, 'createCollectionItem');
-      sinon.spy(view, 'onEvent');
+      sinon.spy(view, 'onWatchPropertyChange');
       view.renderContent();
 
       expect(view.createCollectionContainer.callCount).to.equal(1);
       expect(view.createCollectionItem.callCount).to.equal(3);
-      expect(view.onEvent.callCount).to.equal(1);
+      expect(view.onWatchPropertyChange.callCount).to.equal(1);
       expect(view.content.querySelectorAll('li').length).to.equal(3);
 
       view.destroy();
