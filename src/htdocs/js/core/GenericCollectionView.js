@@ -99,7 +99,7 @@ var GenericCollectionView = function (options) {
     _noDataMessage = options.noDataMessage;
 
     _this.el.classList.add(_classPrefix);
-    _this.createScaffold();
+    _createScaffold();
 
     _this.model.off('change', 'render', _this);
     if (_this.watchProperty) {
@@ -204,30 +204,6 @@ var GenericCollectionView = function (options) {
     pre.innerHTML = JSON.stringify(obj, null, '  ');
 
     return pre;
-  };
-
-  /**
-   * Called during initialization. Creates the base HTML structure into
-   * which all rendering is later performed. Sets up event delegation on
-   * `_this.content` to handle click events.
-   *
-   */
-  _this.createScaffold = function () {
-    var el;
-
-    el = _this.el;
-
-    el.innerHTML = [
-      '<header class="', _classPrefix, '-header"></header>',
-      '<section class="', _classPrefix, '-content"></section>',
-      '<footer class="', _classPrefix, '-footer"></footer>'
-    ].join('');
-
-    _this.header = el.querySelector('.' + _classPrefix + '-header');
-    _this.content = el.querySelector('.' + _classPrefix + '-content');
-    _this.footer = el.querySelector('.' + _classPrefix + '-footer');
-
-    _this.content.addEventListener('click', _onContentClick);
   };
 
   /**
