@@ -98,6 +98,8 @@ var GenericCollectionView = function (options) {
     _this.watchProperty = options.watchProperty;
     _noDataMessage = options.noDataMessage;
 
+    _this.renderScheduled = false;
+
     _this.el.classList.add(_classPrefix);
     _createScaffold();
 
@@ -107,9 +109,9 @@ var GenericCollectionView = function (options) {
           _this);
     }
 
-    _this.collection.on('reset', 'render', _this);
-    _this.collection.on('add', 'render', _this);
-    _this.collection.on('remove', 'render', _this);
+    _this.collection.on('reset', 'onCollectionReset', _this);
+    _this.collection.on('add', 'onCollectionAdd', _this);
+    _this.collection.on('remove', 'onCollectionRemove', _this);
   };
 
   /**
@@ -237,9 +239,9 @@ var GenericCollectionView = function (options) {
     }
     _this.model.on('change', 'render', _this);
 
-    _this.collection.off('reset', 'render', _this);
-    _this.collection.off('add', 'render', _this);
-    _this.collection.off('remove', 'render', _this);
+    _this.collection.off('reset', 'onCollectionReset', _this);
+    _this.collection.off('add', 'onCollectionAdd', _this);
+    _this.collection.off('remove', 'onCollectionRemove', _this);
 
     _onContentClick = null;
 
@@ -296,6 +298,33 @@ var GenericCollectionView = function (options) {
   };
 
   /**
+   * Event handler executed when an item is added to the collection. Calls the
+   * render method with force.
+   *
+   */
+  _this.onCollectionAdd = function () {
+    _this.render(true);
+  };
+
+  /**
+   * Event handler executed when an item is removed from the collection.
+   * Calls the render method with force.
+   *
+   */
+  _this.onCollectionRemove = function () {
+    _this.render(true);
+  };
+
+  /**
+   * Event handler executed when the collection is reset. Calls the
+   * render method with force.
+   *
+   */
+  _this.onCollectionReset = function () {
+    _this.render(true);
+  };
+
+  /**
    * Called via event delegation when the user clicks anywhere withing
    * `_this.content`. Finds the clicked element and uses its "data-id"
    * attribute to find the corresponding item in the collection and then
@@ -340,10 +369,14 @@ var GenericCollectionView = function (options) {
    * the content.
    *
    */
-  _this.render = function () {
-    _this.renderHeader();
-    _this.renderContent();
-    _this.renderFooter();
+  _this.render = function (force) {
+    if (_this.renderScheduled || force === true) {
+      _this.renderHeader();
+      _this.renderContent();
+      _this.renderFooter();
+    }
+
+    _this.renderScheduled = false;
   };
 
   /**
