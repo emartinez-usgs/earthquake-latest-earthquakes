@@ -81,9 +81,10 @@ var ListView = function (options) {
     _this.filterEnabled = false;
     _this.mapEnabled = false;
 
-    _this.model.on('change:listFormat', 'render', _this);
-    _this.model.on('change:timezone', 'render', _this);
-    _this.model.on('change:restrictListToMap', 'onRestrictListToMap', _this);
+    _this.model.on('change:listFormat', 'onListFormatChange', _this);
+    _this.model.on('change:timezone', 'onTimezoneChange', _this);
+    _this.model.on('change:restrictListToMap', 'onRestrictListToMapChange',
+        _this);
 
     _createScaffold();
   };
@@ -159,7 +160,8 @@ var ListView = function (options) {
 
     _this.model.off('change:listFormat', 'render', _this);
     _this.model.off('change:timezone', 'render', _this);
-    _this.model.off('change:restrictListToMap', 'onRestrictListToMap', _this);
+    _this.model.off('change:restrictListToMap', 'onRestrictListToMapChange',
+        _this);
 
     _bounds = null;
     _downloadButton = null;
@@ -270,6 +272,10 @@ var ListView = function (options) {
     _downloadModal.show();
   };
 
+  _this.onListFormatChange = function () {
+    _this.renderScheduled = true;
+  };
+
   /**
    * Sets up the mapposition:change binding that filters the list to the
    * map extents.
@@ -279,7 +285,7 @@ var ListView = function (options) {
    * when the "restrictListToMap" setting is disabled.
    *
    */
-  _this.onRestrictListToMap = function () {
+  _this.onRestrictListToMapChange = function () {
     var restrictListToMap;
 
     restrictListToMap = _this.model.get('restrictListToMap');
@@ -300,14 +306,18 @@ var ListView = function (options) {
       _this.model.off('change:mapposition', _this.render, _this);
     }
 
-    _this.render();
+    _this.renderScheduled = true;
+  };
+
+  _this.onTimezoneChange = function () {
+    _this.renderScheduled = true;
   };
 
   /**
    * Override render to get a referene to current list format,
    * and configure timezone before rendering.
    */
-  _this.render = Util.compose(function () {
+  _this.render = Util.compose(function (obj) {
     var listFormat,
         timezoneOffset;
 
@@ -325,6 +335,7 @@ var ListView = function (options) {
     }
 
     _listFormat = listFormat;
+    return obj;
   }, _this.render);
 
   /**
