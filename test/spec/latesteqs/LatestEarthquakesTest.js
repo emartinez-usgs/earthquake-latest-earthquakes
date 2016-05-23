@@ -25,31 +25,32 @@ model = Model({
 });
 
 describe('latesteqs/LatestEarthquakes', function () {
-  beforeEach(function () {
-    try {
-      latestEarthquakes = LatestEarthquakes({
-        model: model,
-        settings: {
-          viewModes: [
-            'settings',
-            'help'
-          ]
-        }
-      });
-    } catch (e) {
-      console.log(e.stack);
-    }
-  });
-
-  afterEach(function () {
-    try {
-      latestEarthquakes.destroy();
-    } catch (e) {
-
-    }
-  });
-
   describe('setMode', function () {
+    beforeEach(function () {
+      try {
+        latestEarthquakes = LatestEarthquakes({
+          model: model,
+          settings: {
+            viewModes: [
+              'settings',
+              'help'
+            ]
+          }
+        });
+      } catch (e) {
+        console.log(e.stack);
+      }
+    });
+
+    afterEach(function () {
+      try {
+        latestEarthquakes.destroy();
+      } catch (e) {
+
+      }
+    });
+
+
     it('sets mode correctly', function () {
       latestEarthquakes.setMode('help', true);
       /* jshint -W030 */
