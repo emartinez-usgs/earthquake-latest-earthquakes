@@ -103,7 +103,6 @@ var GenericCollectionView = function (options) {
     _this.el.classList.add(_classPrefix);
     _createScaffold();
 
-    _this.model.off('change', 'render', _this);
     if (_this.watchProperty) {
       _this.model.on('change:' + _this.watchProperty, 'onWatchPropertyChange',
           _this);
@@ -233,10 +232,6 @@ var GenericCollectionView = function (options) {
   _this.destroy = Util.compose(function () {
     _this.content.removeEventListener('click', _this.onContentClick, _this);
 
-    if (_this.watchProperty) {
-      _this.model.off('change:' + _this.watchProperty, 'onWatchPropertyChange',
-          _this);
-    }
     _this.model.on('change', 'render', _this);
 
     _this.collection.off('reset', 'onCollectionReset', _this);
